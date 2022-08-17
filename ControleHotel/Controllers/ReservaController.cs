@@ -24,8 +24,16 @@ namespace ControleHotel.Controllers
         //[Authorize(Roles = "admin")] TODO: AINDA ESTA SEM AUTORIZACAO
         public IActionResult AdicionaReserva([FromBody] CreateReservaDto ReservaDto)
         {
-            ReadReservaDto readDto = _reservaService.AdicionaReserva(ReservaDto);
-            return CreatedAtAction(nameof(RecuperaReservaPorId), new { Id = readDto.Id }, readDto);
+            Result resultado = _reservaService.AdicionaReserva(ReservaDto);
+
+            if (resultado.IsFailed)
+            {
+                return NotFound(resultado);
+            }
+            else
+            {
+                return Ok("Nova Reserva Adicionada");
+            }
         }
 
 

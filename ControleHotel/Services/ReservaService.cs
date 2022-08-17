@@ -21,13 +21,41 @@ namespace ControleHotel.Services
             _context = context;
             _mapper = mapper;
         }
-        public ReadReservaDto AdicionaReserva(CreateReservaDto ReservaDto)
+        public Result AdicionaReserva(CreateReservaDto ReservaDto)
         {
-            Reserva Reserva = _mapper.Map<Reserva>(ReservaDto);
-            _context.Reservas.Add(Reserva);
-            _context.SaveChanges();
-            return _mapper.Map<ReadReservaDto>(Reserva);
+            Reserva reserva = _mapper.Map<Reserva>(ReservaDto);
+
+            if (ValidaReserva(reserva))
+            {
+                _context.Reservas.Add(reserva);
+                _context.SaveChanges();
+                return Result.Ok();
+            }
+            return Result.Fail($"Já Existe Reserva Neste Quarto Para o Dia " + reserva.DataCheckIn.Date.ToShortDateString() + "!");
         }
+
+
+
+        public bool ValidaReserva(Reserva reserva)
+        {
+            List<Reserva> reservasQuarto = _context.Reservas.Where(r => r.QuartoId == reserva.QuartoId) // verifica reservas nos quartos
+                .Where(r=> r.DataCheckIn.DayOfYear + r.DiasReserva - reserva.DataCheckIn.DayOfYear >0) // verifica reservas no periodo
+                .ToList();
+            // TODO:  Terminar de fazer verificação da data, colocar verificação de tempo de reserva efetuado
+            if (reservasQuarto.Count() > 0 )
+            {
+                return false;
+
+            }
+            else
+            {
+                return true;
+            }
+
+
+
+        }
+
 
         public List<ReadReservaDto> RecuperaReservas()
         {
