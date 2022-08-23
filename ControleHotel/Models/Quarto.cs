@@ -20,6 +20,9 @@ namespace ControleHotel.Models
         public double Valor { get; set; }
         [JsonIgnore]
         public virtual List<Reserva> Reservas { get; set; }
+
+        [JsonIgnore]
+        public virtual List<Hospedagem> Hospedagems { get; set; }
     }
 }
 

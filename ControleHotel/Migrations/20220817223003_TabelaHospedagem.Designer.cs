@@ -3,14 +3,16 @@ using System;
 using ControleHotel.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ControleHotel.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220817223003_TabelaHospedagem")]
+    partial class TabelaHospedagem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,16 +28,13 @@ namespace ControleHotel.Migrations
                     b.Property<DateTime>("DataCheckIn")
                         .HasColumnType("datetime");
 
-                    b.Property<DateTime>("DataCheckOut")
-                        .HasColumnType("datetime");
+                    b.Property<int>("DiasHospedagem")
+                        .HasColumnType("int");
 
                     b.Property<int>("HospedeId")
                         .HasColumnType("int");
 
                     b.Property<int>("QuartoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StatusHospedagem")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -53,41 +52,11 @@ namespace ControleHotel.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Bairro")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("CEP")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("CPF")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Cidade")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Complemento")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("DataNasc")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("Estado")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Numero")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Rua")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -123,16 +92,13 @@ namespace ControleHotel.Migrations
                     b.Property<DateTime>("DataCheckIn")
                         .HasColumnType("datetime");
 
-                    b.Property<DateTime>("DataCheckOut")
-                        .HasColumnType("datetime");
+                    b.Property<int>("DiasReserva")
+                        .HasColumnType("int");
 
                     b.Property<int>("HospedeId")
                         .HasColumnType("int");
 
                     b.Property<int>("QuartoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StatusReserva")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

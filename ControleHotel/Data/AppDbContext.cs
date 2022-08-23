@@ -16,7 +16,7 @@ namespace ControleHotel.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
-
+    
             builder.Entity<Reserva>()
                .HasOne(reserva => reserva.Quarto)
                .WithMany(quarto => quarto.Reservas)
@@ -27,11 +27,22 @@ namespace ControleHotel.Data
                .HasOne(reserva => reserva.Hospede)
                .WithMany(hospede => hospede.Reservas)
                .HasForeignKey(reserva => reserva.HospedeId);
+
+
+            builder.Entity<Hospedagem>()
+            .HasOne(hospedagem => hospedagem.Quarto)
+            .WithMany(quarto => quarto.Hospedagems)
+            .HasForeignKey(reserva => reserva.QuartoId);
+
+
+            builder.Entity<Hospedagem>()
+               .HasOne(hospedagem => hospedagem.Hospede)
+               .WithMany(hospede => hospede.Hospedagems)
+               .HasForeignKey(hospedagem => hospedagem.HospedeId);
         }
         public DbSet<Hospede> Hospedes { get; set; }
         public DbSet<Quarto> Quartos { get; set; }
         public DbSet<Reserva> Reservas { get; set; }
-
-        //  public DbSet<Filme> Filmes { get; set; } (padrao para adicionar um dbset)
+        public DbSet<Hospedagem> Hospedagems { get; set; }
     }
 }

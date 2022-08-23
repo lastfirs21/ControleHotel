@@ -15,9 +15,11 @@ namespace ControleHotel.Services
     {
         private AppDbContext _context;
         private IMapper _mapper;
+        private ValidadorReserva _validadorReserva;
 
-        public ReservaService(AppDbContext context, IMapper mapper)
+        public ReservaService(AppDbContext context, IMapper mapper, ValidadorReserva validadorReserva)
         {
+            _validadorReserva = validadorReserva;
             _context = context;
             _mapper = mapper;
         }
@@ -25,47 +27,27 @@ namespace ControleHotel.Services
         {
             Reserva reserva = _mapper.Map<Reserva>(ReservaDto);
 
-            if (ValidaReserva(reserva))
+            Result validaReserva = _validadorReserva.ValidarReserva(reserva.QuartoId, reserva.DataCheckIn, reserva.DataCheckOut, "Reserva");
+            if (validaReserva.IsSuccess)
             {
                 _context.Reservas.Add(reserva);
                 _context.SaveChanges();
-                return Result.Ok();
+                return validaReserva;
             }
-            return Result.Fail($"Já Existe Reserva Neste Quarto Para o Dia " + reserva.DataCheckIn.Date.ToShortDateString() + "!");
+            return validaReserva;
         }
 
-
-
-        public bool ValidaReserva(Reserva reserva)
-        {
-            List<Reserva> reservasQuarto = _context.Reservas.Where(r => r.QuartoId == reserva.QuartoId) // verifica reservas nos quartos
-                .Where(r=> r.DataCheckIn.DayOfYear + r.DiasReserva - reserva.DataCheckIn.DayOfYear >0) // verifica reservas no periodo
-                .ToList();
-            // TODO:  Terminar de fazer verificação da data, colocar verificação de tempo de reserva efetuado
-            if (reservasQuarto.Count() > 0 )
-            {
-                return false;
-
-            }
-            else
-            {
-                return true;
-            }
-
-
-
-        }
 
 
         public List<ReadReservaDto> RecuperaReservas()
         {
-            List<Reserva> Reservas;
+            List<Reserva> reserva;
 
-            Reservas = _context.Reservas.ToList();
+            reserva = _context.Reservas.ToList();
 
-            if (Reservas != null)
+            if (reserva != null)
             {
-                List<ReadReservaDto> readDto = _mapper.Map<List<ReadReservaDto>>(Reservas);
+                List<ReadReservaDto> readDto = _mapper.Map<List<ReadReservaDto>>(reserva);
                 return readDto;
             }
             return null;
@@ -73,38 +55,52 @@ namespace ControleHotel.Services
 
         public ReadReservaDto RecuperaReservasPorId(int id)
         {
-            Reserva Reserva = _context.Reservas.FirstOrDefault(Reserva => Reserva.Id == id);
-            if (Reserva != null)
+            Reserva reserva = _context.Reservas.FirstOrDefault(reserva => reserva.Id == id);
+            if (reserva != null)
             {
-                ReadReservaDto ReservaDto = _mapper.Map<ReadReservaDto>(Reserva);
+                ReadReservaDto reservaDto = _mapper.Map<ReadReservaDto>(reserva);
 
-                return ReservaDto;
+                return reservaDto;
             }
             return null;
         }
 
-        public Result AtualizaReserva(int id, UpdateReservaDto ReservaDto)
+        public Result AtualizaReserva(int id, UpdateReservaDto reservaDto)
         {
-            Reserva Reserva = _context.Reservas.FirstOrDefault(Reserva => Reserva.Id == id);
-            if (Reserva == null)
+            Reserva reserva = _context.Reservas.FirstOrDefault(reserva => reserva.Id == id);
+            if (reserva == null)
             {
-                return Result.Fail("Reserva não encontrado");
+                return Result.Fail("Reserva não encontrada");
             }
-            _mapper.Map(ReservaDto, Reserva);
+            _context.Reservas.Remove(reserva);
             _context.SaveChanges();
-            return Result.Ok();
+            Result validaReserva = _validadorReserva.ValidarReserva(reservaDto.QuartoId, reservaDto.DataCheckIn, reservaDto.DataCheckOut, "Reserva");
+            if (validaReserva.IsSuccess)
+            {
+                _mapper.Map(reservaDto, reserva);
+                _context.Reservas.Add(reserva);
+                _context.SaveChanges();
+                return validaReserva;
+            }
+            _context.Reservas.Add(reserva);
+            _context.SaveChanges();
+            return validaReserva;
+
+
         }
 
         public Result DeletaReserva(int id)
         {
-            Reserva Reserva = _context.Reservas.FirstOrDefault(Reserva => Reserva.Id == id);
-            if (Reserva == null)
+            Reserva reserva = _context.Reservas.FirstOrDefault(reserva => reserva.Id == id);
+            if (reserva == null)
             {
-                return Result.Fail("Reserva não encontrado");
+                return Result.Fail("Reserva não encontrada");
             }
-            _context.Remove(Reserva);
+            _context.Reservas.Remove(reserva);
             _context.SaveChanges();
             return Result.Ok();
         }
+
+
     }
 }

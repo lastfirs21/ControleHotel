@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ControleHotel.Data.Dtos.Hospedagem;
 using ControleHotel.Data.Dtos.Reserva;
 using ControleHotel.Models;
 using System;
@@ -14,7 +15,8 @@ namespace ControleHotel.Profiles
         {
             CreateMap<CreateReservaDto, Reserva>();
             CreateMap<Reserva, ReadReservaDto>();
-            CreateMap<UpdateReservaDto, Hospede>();
+            CreateMap<Reserva, CreateHospedagemDto>();
+            CreateMap<UpdateReservaDto, Reserva>();
         }
     }
 }

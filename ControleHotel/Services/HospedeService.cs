@@ -73,7 +73,7 @@ namespace ControleHotel.Services
             {
                 return Result.Fail("Hospede não encontrado");
             }
-            _context.Remove(Hospede);
+            _context.Hospedes.Remove(Hospede);
             _context.SaveChanges();
             return Result.Ok();
         }

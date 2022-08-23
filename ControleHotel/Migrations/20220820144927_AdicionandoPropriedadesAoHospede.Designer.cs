@@ -3,14 +3,16 @@ using System;
 using ControleHotel.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ControleHotel.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220820144927_AdicionandoPropriedadesAoHospede")]
+    partial class AdicionandoPropriedadesAoHospede
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,10 +28,10 @@ namespace ControleHotel.Migrations
                     b.Property<DateTime>("DataCheckIn")
                         .HasColumnType("datetime");
 
-                    b.Property<DateTime>("DataCheckOut")
-                        .HasColumnType("datetime");
-
                     b.Property<int>("HospedeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PeriodoDeDias")
                         .HasColumnType("int");
 
                     b.Property<int>("QuartoId")
@@ -123,10 +125,10 @@ namespace ControleHotel.Migrations
                     b.Property<DateTime>("DataCheckIn")
                         .HasColumnType("datetime");
 
-                    b.Property<DateTime>("DataCheckOut")
-                        .HasColumnType("datetime");
-
                     b.Property<int>("HospedeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PeriodoDeDias")
                         .HasColumnType("int");
 
                     b.Property<int>("QuartoId")

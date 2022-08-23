@@ -1,4 +1,5 @@
 ﻿using ControleHotel.Data.Dtos.Reserva;
+using ControleHotel.Models;
 using ControleHotel.Services;
 using FluentResults;
 using Microsoft.AspNetCore.Mvc;
@@ -63,12 +64,15 @@ namespace ControleHotel.Controllers
 
         }
 
+
         [HttpPut("{id}")]
-        public IActionResult AtualizaReserva(int id, [FromBody] UpdateReservaDto ReservaDto)
+        public IActionResult AtualizaReserva(int id, [FromBody] UpdateReservaDto reservaDto)
         {
-            Result resultado = _reservaService.AtualizaReserva(id, ReservaDto);
-            if (resultado.IsFailed) return NotFound();
-            return NoContent();
+            Result resultado = _reservaService.AtualizaReserva(id, reservaDto);
+            if (resultado.IsFailed) return NotFound(resultado);
+            return Ok("Atualização Realizada com Sucesso");
         }
+
+
     }
 }
